@@ -1,0 +1,55 @@
+@using System.Globalization
+@model PortalInmobiliario.Models.Inmueble
+
+@{
+    ViewData["Title"] = Model.Titulo;
+    var culturaPeru = new CultureInfo("es-PE");
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-7">
+            <img src="@Model.Imagen" alt="Imagen de @Model.Titulo" class="img-fluid rounded shadow-sm">
+        </div>
+
+        <div class="col-md-5">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">@Model.Titulo</h2>
+                    <h4 class="text-success font-weight-bold">@Model.Precio.ToString("C", culturaPeru)</h4>
+                    <p class="text-muted">@Model.Direccion, @Model.Ciudad</p>
+                    <hr>
+                    
+                    <h5>Detalles del Inmueble</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Código
+                            <span class="badge bg-secondary">@Model.Codigo</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Tipo
+                            <span class="badge bg-info">@Model.Tipo</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Área
+                            <span class="badge bg-light text-dark">@Model.MetrosCuadrados m²</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Dormitorios
+                            <span class="badge bg-light text-dark">@Model.Dormitorios</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Baños
+                            <span class="badge bg-light text-dark">@Model.Banos</span>
+                        </li>
+                    </ul>
+
+                    <div class="d-grid gap-2 mt-4">
+                        <a asp-controller="Visitas" asp-action="Agendar" asp-route-inmuebleId="@Model.Id" class="btn btn-success btn-lg">Agendar Visita</a>
+                        <a asp-controller="Catalogo" asp-action="Index" class="btn btn-outline-secondary">Volver al Catálogo</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

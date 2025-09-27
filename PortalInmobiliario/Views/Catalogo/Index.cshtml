@@ -1,0 +1,91 @@
+@model PortalInmobiliario.Models.CatalogoViewModel
+@{
+    ViewData["Title"] = "Catálogo de Inmuebles";
+}
+
+<div class="container">
+    <h1 class="my-4">Catálogo de Inmuebles</h1>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Filtros de Búsqueda</h5>
+            <form asp-action="Index" method="get">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label asp-for="CiudadFiltro">Ciudad</label>
+                        <select asp-for="CiudadFiltro" asp-items="Model.Ciudades" class="form-control">
+                            <option value="">Todas</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label asp-for="TipoFiltro">Tipo</label>
+                        <select asp-for="TipoFiltro" asp-items="Html.GetEnumSelectList<TipoInmueble>()" class="form-control">
+                            <option value="">Todos</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label asp-for="PrecioMinFiltro">Precio Mín.</label>
+                        <input type="number" asp-for="PrecioMinFiltro" class="form-control" />
+                    </div>
+                    <div class="col-md-2">
+                        <label asp-for="PrecioMaxFiltro">Precio Máx.</label>
+                        <input type="number" asp-for="PrecioMaxFiltro" class="form-control" />
+                    </div>
+                    <div class="col-md-2">
+                        <label asp-for="DormitoriosFiltro">Dorm. Mín.</label>
+                        <input type="number" asp-for="DormitoriosFiltro" class="form-control" />
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary">Filtrar</button>
+                        <a asp-action="Index" class="btn btn-secondary">Limpiar Filtros</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        @if (!Model.Inmuebles.Any())
+        {
+            <p>No se encontraron inmuebles que coincidan con los filtros seleccionados.</p>
+        }
+        else
+        {
+            @foreach (var inmueble in Model.Inmuebles)
+            {
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                    <div class="card h-100">
+                        <img src="@inmueble.Imagen" class="card-img-top" alt="@inmueble.Titulo" style="height: 200px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="card-title">@inmueble.Titulo</h5>
+                            <p class="card-text">
+                                <small class="text-muted">@inmueble.Ciudad</small><br>
+                                <strong>S/ @inmueble.Precio.ToString("N0")</strong>
+                            </p>
+                            <a asp-action="Detalle" asp-route-id="@inmueble.Id" class="btn btn-sm btn-outline-primary">Ver Detalle</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+    <nav>
+        <ul class="pagination justify-content-center">
+            @for (int i = 1; i <= Model.TotalPaginas; i++)
+            {
+                <li class="page-item @(i == Model.PaginaActual ? "active" : "")">
+                    <a class="page-link" asp-action="Index" 
+                       asp-route-pagina="@i"
+                       asp-route-ciudad="@Model.CiudadFiltro"
+                       asp-route-tipo="@Model.TipoFiltro"
+                       asp-route-precioMin="@Model.PrecioMinFiltro"
+                       asp-route-precioMax="@Model.PrecioMaxFiltro"
+                       asp-route-dormitorios="@Model.DormitoriosFiltro">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+</div>
